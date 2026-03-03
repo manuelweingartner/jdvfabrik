@@ -15,47 +15,79 @@ export function clearApiKey() {
   localStorage.removeItem('fabrik-gemini-key');
 }
 
+async function fetchGemini(apiKey, userMessage, useSearch) {
+  const body = {
+    systemInstruction: {
+      parts: [{ text: SYSTEM_PROMPT }]
+    },
+    contents: [
+      {
+        role: 'user',
+        parts: [{ text: userMessage }]
+      }
+    ],
+    generationConfig: {
+      temperature: 1.0,
+      maxOutputTokens: 16000
+    }
+  };
+
+  if (useSearch) {
+    body.tools = [{ googleSearch: {} }];
+  }
+
+  const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    let detail = '';
+    try {
+      const err = JSON.parse(errorText);
+      detail = err.error?.message || '';
+    } catch {}
+    throw { status: response.status, detail };
+  }
+
+  const data = await response.json();
+  const parts = data.candidates?.[0]?.content?.parts || [];
+  return parts
+    .filter((p) => p.text)
+    .map((p) => p.text)
+    .join('');
+}
+
 export async function callGemini(userMessage) {
   const apiKey = getApiKey();
   if (!apiKey) {
     throw new Error('Kein API-Key gesetzt');
   }
 
-  const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      systemInstruction: {
-        parts: [{ text: SYSTEM_PROMPT }]
-      },
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: userMessage }]
+  // Try with Google Search first
+  try {
+    return await fetchGemini(apiKey, userMessage, true);
+  } catch (err) {
+    if (err.status === 429) {
+      console.warn('Rate limit mit Search, versuche ohne...');
+      // Fallback: without search
+      try {
+        return await fetchGemini(apiKey, userMessage, false);
+      } catch (err2) {
+        if (err2.status === 429) {
+          throw new Error('Rate Limit erreicht. Bitte 1 Minute warten und nochmal versuchen.');
         }
-      ],
-      tools: [{ googleSearch: {} }],
-      generationConfig: {
-        temperature: 1.0,
-        maxOutputTokens: 16000
+        if (err2.status === 400 || err2.status === 403) {
+          throw new Error('Ungültiger API-Key. Bitte prüfen.');
+        }
+        throw new Error(`Gemini Fehler: ${err2.status} ${err2.detail || ''}`);
       }
-    })
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    if (response.status === 400 || response.status === 403) {
+    }
+    if (err.status === 400 || err.status === 403) {
       throw new Error('Ungültiger API-Key. Bitte prüfen.');
     }
-    throw new Error(`Gemini API Fehler: ${response.status}`);
+    throw new Error(`Gemini Fehler: ${err.status} ${err.detail || ''}`);
   }
-
-  const data = await response.json();
-  const parts = data.candidates?.[0]?.content?.parts || [];
-  const textContent = parts
-    .filter((p) => p.text)
-    .map((p) => p.text)
-    .join('');
-
-  return textContent;
 }

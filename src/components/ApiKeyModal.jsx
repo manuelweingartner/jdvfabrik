@@ -12,21 +12,21 @@ export default function ApiKeyModal({ onSave, theme }) {
       style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
       <div className="w-full max-w-md p-6" style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}` }}>
         <h2 className="text-lg mb-1" style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
-          jardinduvin <span className="text-[10px] font-mono uppercase tracking-[0.2em] not-italic opacity-60">Fabrik</span>
+          jardinduvin <span className="text-[10px] font-sans uppercase tracking-[0.2em] not-italic opacity-60">Fabrik</span>
         </h2>
         <p className="text-xs mb-6" style={{ color: mutedText }}>
-          Gratis Mistral API-Key nötig. Wird nur lokal in deinem Browser gespeichert.
+          Gratis Gemini API-Key nötig. Wird nur lokal in deinem Browser gespeichert.
         </p>
 
         <div className="mb-4">
           <label className="block text-[10px] uppercase tracking-wider mb-2 opacity-60">
-            Mistral API-Key
+            Gemini API-Key
           </label>
           <input
             type="password"
             value={key}
             onChange={(e) => setKey(e.target.value)}
-            placeholder="Dein Mistral Key..."
+            placeholder="AIzaSy..."
             className="w-full px-3 py-2 text-sm bg-transparent outline-none"
             style={{ border: `1px solid ${borderColor}`, fontFamily: "'IBM Plex Mono', monospace" }}
             onKeyDown={(e) => {
@@ -45,8 +45,8 @@ export default function ApiKeyModal({ onSave, theme }) {
         </button>
 
         <p className="text-[10px] mt-4 leading-relaxed" style={{ color: mutedText }}>
-          3 Schritte: <a href="https://console.mistral.ai/" target="_blank" rel="noopener noreferrer"
-            className="underline" style={{ color: '#457B9D' }}>console.mistral.ai</a> → Account erstellen → API Keys → Key erstellen. Komplett gratis.
+          Key holen: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer"
+            className="underline" style={{ color: '#457B9D' }}>aistudio.google.com/apikey</a> → "Create API key in new project". Komplett gratis.
         </p>
       </div>
     </div>

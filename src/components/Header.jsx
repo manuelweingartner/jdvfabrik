@@ -13,6 +13,7 @@ export default function Header({
   metrics,
   onGenerate,
   loading,
+  loadingStatus,
   lastUpdate,
   nextRefresh,
   onShowFavorites,
@@ -65,6 +66,10 @@ export default function Header({
               {new Date(lastUpdate).toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' })}
               {timeLeft != null && ` | ${formatTimeRemaining(timeLeft)}`}
             </span>
+          )}
+
+          {loading && loadingStatus && (
+            <span className="text-[10px] opacity-50">{loadingStatus}</span>
           )}
 
           <button

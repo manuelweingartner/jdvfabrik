@@ -37,71 +37,56 @@ export default function Header({
 
   return (
     <header
-      className="sticky top-0 z-50 px-4 py-3"
+      className="sticky top-0 z-50 px-3 py-2"
       style={{ backgroundColor: bgColor, borderBottom: `1px solid ${borderColor}` }}
     >
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        {/* Logo */}
-        <div className="flex items-center gap-3">
+      {/* Top row: Logo + main actions */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
           <img
             src={AVATAR_URL}
             alt="jardinduvin"
-            className="w-9 h-9 rounded-full"
+            className="w-8 h-8 rounded-full"
             style={{ border: `2px solid ${theme === 'dark' ? '#333' : '#ccc'}` }}
           />
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-baseline gap-1.5">
             <span
-              className="text-2xl font-bold"
+              className="text-xl font-bold"
               style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}
             >
               jardinduvin
             </span>
-            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] opacity-50">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.2em] opacity-50 hidden min-[400px]:inline">
               Fabrik
             </span>
           </div>
         </div>
 
-        {/* Metrics */}
-        <div className="flex items-center gap-4 text-[11px] tracking-wide opacity-50">
-          <span>{metrics.generated} generiert</span>
-          <span>{metrics.copied} kopiert</span>
-          <span>{metrics.saved} gemerkt</span>
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center gap-2">
-          {lastUpdate && (
-            <span className="text-[10px] opacity-30 mr-1">
-              {new Date(lastUpdate).toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' })}
-              {timeLeft != null && ` | ${formatTimeRemaining(timeLeft)}`}
-            </span>
-          )}
-
+        <div className="flex items-center gap-1.5">
           {loading && loadingStatus && (
-            <span className="text-[10px] opacity-50 mr-1">{loadingStatus}</span>
+            <span className="text-[10px] opacity-50 hidden sm:inline">{loadingStatus}</span>
           )}
 
           <button
             onClick={onGenerate}
             disabled={loading}
-            className="px-5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-white rounded-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-white rounded-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ backgroundColor: '#E63946' }}
           >
-            {loading ? 'Generiert...' : 'Generieren'}
+            {loading ? '...' : 'Go'}
           </button>
 
           <button
             onClick={onShowFavorites}
-            className="px-3 py-1.5 text-[11px] tracking-wide rounded-sm cursor-pointer"
+            className="px-2 py-1.5 text-[11px] tracking-wide rounded-sm cursor-pointer"
             style={{ border: `1px solid ${borderColor}` }}
           >
-            Gemerkt ({favCount})
+            <span className="hidden sm:inline">Gemerkt </span>({favCount})
           </button>
 
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="px-3 py-1.5 text-[11px] tracking-wide rounded-sm cursor-pointer"
+            className="px-2 py-1.5 text-[11px] tracking-wide rounded-sm cursor-pointer"
             style={{ border: `1px solid ${borderColor}` }}
           >
             {theme === 'dark' ? 'Hell' : 'Dunkel'}
@@ -109,13 +94,26 @@ export default function Header({
 
           <button
             onClick={onClearKey}
-            className="px-2 py-1.5 text-[10px] tracking-wide rounded-sm cursor-pointer opacity-25 hover:opacity-60"
+            className="px-1.5 py-1.5 text-[10px] tracking-wide rounded-sm cursor-pointer opacity-25 hover:opacity-60"
             style={{ border: `1px solid ${borderColor}` }}
             title="API-Key wechseln"
           >
             Key
           </button>
         </div>
+      </div>
+
+      {/* Bottom row: metrics + timer (desktop only) */}
+      <div className="hidden sm:flex items-center gap-4 mt-1 text-[10px] tracking-wide opacity-40">
+        <span>{metrics.generated} generiert</span>
+        <span>{metrics.copied} kopiert</span>
+        <span>{metrics.saved} gemerkt</span>
+        {lastUpdate && (
+          <span>
+            {new Date(lastUpdate).toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' })}
+            {timeLeft != null && ` | Nächste: ${formatTimeRemaining(timeLeft)}`}
+          </span>
+        )}
       </div>
     </header>
   );

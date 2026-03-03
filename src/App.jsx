@@ -101,7 +101,7 @@ export default function App() {
     const dateStr = now.toLocaleDateString('de-CH', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
-    const userMessage = `Es ist ${dateStr}. Generiere genau 3 Posts pro Kategorie (18 total, 6 Kategorien). Antworte NUR mit einem validen JSON-Array.`;
+    const userMessage = `Es ist ${dateStr}. Generiere genau 5 Posts pro Kategorie (30 total, 6 Kategorien). Bei swiss und intl: beziehe dich auf KONKRETE aktuelle Politiker:innen, Gesetze, Abstimmungen, Skandale, Ereignisse von dieser Woche. Keine allgemeinen Takes. Antworte NUR mit einem validen JSON-Array.`;
 
     try {
       const textContent = await callGemini(userMessage, setLoadingStatus);

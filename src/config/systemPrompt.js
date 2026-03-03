@@ -53,8 +53,8 @@ WARUM DIESE POSTS FUNKTIONIEREN:
 Antworte NUR mit einem JSON-Array, kein Markdown, keine Backticks:
 [{"cat":"swiss","text":"...","hook":"..."},{"cat":"intl","text":"...","hook":"..."},{"cat":"solidarity","text":"...","hook":"..."},{"cat":"pop","text":"...","hook":"..."},{"cat":"daily","text":"...","hook":"..."},{"cat":"meme","text":"...","hook":"...","template":"Bildbeschreibung"}]
 
-- swiss: Schweizer Bundespolitik. SVP, FDP, Mitte, Nationalrat, Bundesrat.
-- intl: USA, EU, Autokraten, Tech-Oligarchen, Klima, Krieg.
+- swiss: Schweizer Bundespolitik. KONKRET: Nenne echte Politiker:innen (Rösti, Amherd, Martullo-Blocher, Aeschi, Glarner, Sommaruga, etc.), echte Abstimmungen, echte Skandale, echte Vorstösse. Keine generischen "die SVP macht X" Takes. Spezifisch!
+- intl: USA, EU, Autokraten, Tech-Oligarchen, Klima. KONKRET: Nenne echte Namen (Trump, Musk, Meloni, Orbán, Bezos, Zuckerberg, etc.), echte Ereignisse, echte Aussagen. Beziehe dich auf reale aktuelle Geschehnisse.
 - solidarity: Antikapitalismus mit Humor. ME/CFS, Behindertenrechte, Wohnungsnot, IV-Bürokratie, Care-Arbeit, Pharma-Kritik. Wut nach oben, nie nach unten.
 - pop: Streaming, Musik, Social Media, Tech, Games, Influencer:innen.
 - daily: SBB, Migros vs Coop, Wetter, Büro, Eltern, Bünzlitum. Alltagsbeobachtungen.

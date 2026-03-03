@@ -16,7 +16,8 @@ export default function Header({
   lastUpdate,
   nextRefresh,
   onShowFavorites,
-  favCount
+  favCount,
+  onClearKey
 }) {
   const [timeLeft, setTimeLeft] = useState(null);
 
@@ -89,6 +90,15 @@ export default function Header({
             style={{ border: `1px solid ${borderColor}` }}
           >
             {theme === 'dark' ? 'Hell' : 'Dunkel'}
+          </button>
+
+          <button
+            onClick={onClearKey}
+            className="px-3 py-1.5 text-[10px] uppercase tracking-wider cursor-pointer opacity-30 hover:opacity-70"
+            style={{ border: `1px solid ${borderColor}` }}
+            title="API-Key wechseln"
+          >
+            Key
           </button>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { SYSTEM_PROMPT } from './config/systemPrompt';
 
-const GEMINI_MODEL = 'gemini-2.0-flash';
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+const MISTRAL_URL = 'https://api.mistral.ai/v1/chat/completions';
+const MODEL = 'mistral-large-latest';
 
 export function getApiKey() {
   return localStorage.getItem('fabrik-api-key') || '';
@@ -21,25 +21,22 @@ export async function callGemini(userMessage, onStatus) {
     throw new Error('Kein API-Key gesetzt');
   }
 
-  onStatus?.('Generiert...');
+  onStatus?.('Generiert mit Mistral Large...');
 
-  const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
+  const response = await fetch(MISTRAL_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
     body: JSON.stringify({
-      systemInstruction: {
-        parts: [{ text: SYSTEM_PROMPT }]
-      },
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: userMessage }]
-        }
+      model: MODEL,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: userMessage }
       ],
-      generationConfig: {
-        temperature: 1.0,
-        maxOutputTokens: 8000
-      }
+      temperature: 1.0,
+      max_tokens: 8000
     })
   });
 
@@ -48,22 +45,18 @@ export async function callGemini(userMessage, onStatus) {
     let detail = '';
     try {
       const err = JSON.parse(errorText);
-      detail = err.error?.message || '';
+      detail = err.message || err.error?.message || '';
     } catch {}
 
     if (response.status === 429) {
       throw new Error('Rate Limit. Bitte 30 Sekunden warten.');
     }
-    if (response.status === 400 || response.status === 403) {
+    if (response.status === 401) {
       throw new Error('Ungültiger API-Key. Bitte prüfen.');
     }
     throw new Error(`API Fehler ${response.status}: ${detail}`);
   }
 
   const data = await response.json();
-  const parts = data.candidates?.[0]?.content?.parts || [];
-  return parts
-    .filter((p) => p.text)
-    .map((p) => p.text)
-    .join('');
+  return data.choices?.[0]?.message?.content || '';
 }

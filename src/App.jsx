@@ -100,7 +100,7 @@ export default function App() {
     const dateStr = now.toLocaleDateString('de-CH', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
-    const userMessage = `Es ist ${dateStr}. Generiere genau 10 Posts pro Kategorie (60 total, 6 Kategorien). Nutze Web-Suche für aktuelle Nachrichten von heute. Antworte NUR mit einem validen JSON-Array.`;
+    const userMessage = `Es ist ${dateStr}. Generiere genau 3 Posts pro Kategorie (18 total, 6 Kategorien). Nutze Web-Suche für aktuelle Nachrichten von heute. Antworte NUR mit einem validen JSON-Array.`;
 
     try {
       const textContent = await callGemini(userMessage);
@@ -133,7 +133,7 @@ export default function App() {
     const dateStr = now.toLocaleDateString('de-CH', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
-    const userMessage = `Es ist ${dateStr}. Generiere genau 10 Posts NUR für die Kategorie "${category}" (${CATEGORY_CONFIG[category].label}). Nutze Web-Suche für aktuelle Nachrichten von heute. Antworte NUR mit einem validen JSON-Array.`;
+    const userMessage = `Es ist ${dateStr}. Generiere genau 5 Posts NUR für die Kategorie "${category}" (${CATEGORY_CONFIG[category].label}). Nutze Web-Suche für aktuelle Nachrichten von heute. Antworte NUR mit einem validen JSON-Array.`;
 
     try {
       const textContent = await callGemini(userMessage);

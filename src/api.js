@@ -60,6 +60,25 @@ async function fetchGemini(apiKey, userMessage, useSearch) {
     .join('');
 }
 
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function tryWithRetry(apiKey, userMessage, useSearch, retries = 2) {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await fetchGemini(apiKey, userMessage, useSearch);
+    } catch (err) {
+      if (err.status === 429 && i < retries) {
+        console.warn(`Rate limit (Versuch ${i + 1}), warte ${(i + 1) * 10}s...`);
+        await wait((i + 1) * 10000);
+        continue;
+      }
+      throw err;
+    }
+  }
+}
+
 export async function callGemini(userMessage) {
   const apiKey = getApiKey();
   if (!apiKey) {
@@ -68,16 +87,15 @@ export async function callGemini(userMessage) {
 
   // Try with Google Search first
   try {
-    return await fetchGemini(apiKey, userMessage, true);
+    return await tryWithRetry(apiKey, userMessage, true, 1);
   } catch (err) {
     if (err.status === 429) {
       console.warn('Rate limit mit Search, versuche ohne...');
-      // Fallback: without search
       try {
-        return await fetchGemini(apiKey, userMessage, false);
+        return await tryWithRetry(apiKey, userMessage, false, 2);
       } catch (err2) {
         if (err2.status === 429) {
-          throw new Error('Rate Limit erreicht. Bitte 1 Minute warten und nochmal versuchen.');
+          throw new Error('Rate Limit erreicht. Bitte 1-2 Minuten warten und nochmal versuchen.');
         }
         if (err2.status === 400 || err2.status === 403) {
           throw new Error('Ungültiger API-Key. Bitte prüfen.');

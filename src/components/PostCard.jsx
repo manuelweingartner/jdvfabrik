@@ -49,7 +49,7 @@ export default function PostCard({
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
               className="w-full bg-transparent text-sm leading-relaxed resize-none outline-none"
-              style={{ minHeight: 80, fontFamily: "'JetBrains Mono', monospace" }}
+              style={{ minHeight: 80, fontFamily: "'IBM Plex Mono', monospace" }}
               maxLength={350}
             />
             <div className="flex items-center justify-between mt-2">

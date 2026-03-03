@@ -15,12 +15,13 @@
   --color-meme: #7B2D8E;
   --color-border-dark: #2A2A2A;
   --color-border-light: #D4D0CB;
-  --font-mono: 'JetBrains Mono', monospace;
-  --font-serif: 'Instrument Serif', serif;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', monospace;
 }
 
 body {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   margin: 0;
   padding: 0;
   transition: background-color 0.2s, color 0.2s;
@@ -36,24 +37,11 @@ body.light {
   color: var(--color-text-light);
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 4px;
-}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+.dark ::-webkit-scrollbar-thumb { background: #333; }
+.light ::-webkit-scrollbar-thumb { background: #ccc; }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: #333;
-}
-
-.light ::-webkit-scrollbar-thumb {
-  background: #ccc;
-}
-
-/* Column scroll containers */
 .column-scroll {
   overflow-y: auto;
   max-height: calc(100vh - 180px);

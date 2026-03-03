@@ -11,7 +11,7 @@ export default function ApiKeyModal({ onSave, theme }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
       <div className="w-full max-w-md p-6" style={{ backgroundColor: cardBg, border: `1px solid ${borderColor}` }}>
-        <h2 className="text-lg mb-1" style={{ fontFamily: "'Instrument Serif', serif", fontStyle: 'italic' }}>
+        <h2 className="text-lg mb-1" style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
           jardinduvin <span className="text-[10px] font-mono uppercase tracking-[0.2em] not-italic opacity-60">Fabrik</span>
         </h2>
         <p className="text-xs mb-6" style={{ color: mutedText }}>
@@ -28,7 +28,7 @@ export default function ApiKeyModal({ onSave, theme }) {
             onChange={(e) => setKey(e.target.value)}
             placeholder="Dein Mistral Key..."
             className="w-full px-3 py-2 text-sm bg-transparent outline-none"
-            style={{ border: `1px solid ${borderColor}`, fontFamily: "'JetBrains Mono', monospace" }}
+            style={{ border: `1px solid ${borderColor}`, fontFamily: "'IBM Plex Mono', monospace" }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && key.trim()) onSave(key.trim());
             }}

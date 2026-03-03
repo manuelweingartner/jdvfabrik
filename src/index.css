@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-dark: #0A0A0A;
+  --color-card-dark: #161616;
+  --color-text-dark: #E8E6E3;
+  --color-bg-light: #F5F0EB;
+  --color-card-light: #FFFFFF;
+  --color-text-light: #1A1A1A;
+  --color-swiss: #E63946;
+  --color-intl: #457B9D;
+  --color-solidarity: #D63384;
+  --color-pop: #E76F51;
+  --color-daily: #588157;
+  --color-meme: #7B2D8E;
+  --color-border-dark: #2A2A2A;
+  --color-border-light: #D4D0CB;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-serif: 'Instrument Serif', serif;
+}
+
+body {
+  font-family: var(--font-mono);
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+body.dark {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-dark);
+}
+
+body.light {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-light);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #333;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+
+/* Column scroll containers */
+.column-scroll {
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+}
+
+@media (max-width: 900px) {
+  .column-scroll {
+    max-height: calc(100vh - 240px);
+  }
+}

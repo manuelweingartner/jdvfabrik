@@ -1,36 +1,45 @@
 import { SYSTEM_PROMPT } from './config/systemPrompt';
 
-const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const MODEL_PRIMARY = 'llama-3.3-70b-versatile';
-const MODEL_FALLBACK = 'llama-3.1-8b-instant';
+const GEMINI_MODEL = 'gemini-2.0-flash';
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 export function getApiKey() {
-  return localStorage.getItem('fabrik-groq-key') || '';
+  return localStorage.getItem('fabrik-api-key') || '';
 }
 
 export function setApiKey(key) {
-  localStorage.setItem('fabrik-groq-key', key);
+  localStorage.setItem('fabrik-api-key', key);
 }
 
 export function clearApiKey() {
-  localStorage.removeItem('fabrik-groq-key');
+  localStorage.removeItem('fabrik-api-key');
 }
 
-async function fetchGroq(apiKey, userMessage, model) {
-  const response = await fetch(GROQ_URL, {
+export async function callGemini(userMessage, onStatus) {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    throw new Error('Kein API-Key gesetzt');
+  }
+
+  onStatus?.('Generiert...');
+
+  const response = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model,
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userMessage }
+      systemInstruction: {
+        parts: [{ text: SYSTEM_PROMPT }]
+      },
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: userMessage }]
+        }
       ],
-      temperature: 1.0,
-      max_tokens: 8000
+      generationConfig: {
+        temperature: 1.0,
+        maxOutputTokens: 8000
+      }
     })
   });
 
@@ -41,42 +50,20 @@ async function fetchGroq(apiKey, userMessage, model) {
       const err = JSON.parse(errorText);
       detail = err.error?.message || '';
     } catch {}
-    throw { status: response.status, detail };
+
+    if (response.status === 429) {
+      throw new Error('Rate Limit. Bitte 30 Sekunden warten.');
+    }
+    if (response.status === 400 || response.status === 403) {
+      throw new Error('Ungültiger API-Key. Bitte prüfen.');
+    }
+    throw new Error(`API Fehler ${response.status}: ${detail}`);
   }
 
   const data = await response.json();
-  return data.choices?.[0]?.message?.content || '';
-}
-
-export async function callGemini(userMessage, onStatus) {
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    throw new Error('Kein API-Key gesetzt');
-  }
-
-  // Try primary model (70B)
-  try {
-    onStatus?.('Generiert mit Llama 3.3 70B...');
-    return await fetchGroq(apiKey, userMessage, MODEL_PRIMARY);
-  } catch (err) {
-    if (err.status === 429) {
-      // Fallback to faster/smaller model
-      try {
-        onStatus?.('Fallback: Llama 3.1 8B...');
-        return await fetchGroq(apiKey, userMessage, MODEL_FALLBACK);
-      } catch (err2) {
-        if (err2.status === 429) {
-          throw new Error('Rate Limit erreicht. Bitte kurz warten.');
-        }
-        if (err2.status === 401) {
-          throw new Error('Ungültiger API-Key. Bitte prüfen.');
-        }
-        throw new Error(`Groq Fehler: ${err2.status} ${err2.detail || ''}`);
-      }
-    }
-    if (err.status === 401) {
-      throw new Error('Ungültiger API-Key. Bitte prüfen.');
-    }
-    throw new Error(`Groq Fehler: ${err.status} ${err.detail || ''}`);
-  }
+  const parts = data.candidates?.[0]?.content?.parts || [];
+  return parts
+    .filter((p) => p.text)
+    .map((p) => p.text)
+    .join('');
 }

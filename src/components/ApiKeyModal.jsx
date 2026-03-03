@@ -15,18 +15,18 @@ export default function ApiKeyModal({ onSave, theme }) {
           jardinduvin <span className="text-[10px] font-mono uppercase tracking-[0.2em] not-italic opacity-60">Fabrik</span>
         </h2>
         <p className="text-xs mb-6" style={{ color: mutedText }}>
-          Gratis Groq API-Key nötig. Wird nur lokal in deinem Browser gespeichert.
+          Gratis Gemini API-Key nötig. Wird nur lokal in deinem Browser gespeichert.
         </p>
 
         <div className="mb-4">
           <label className="block text-[10px] uppercase tracking-wider mb-2 opacity-60">
-            Groq API-Key
+            Gemini API-Key
           </label>
           <input
             type="password"
             value={key}
             onChange={(e) => setKey(e.target.value)}
-            placeholder="gsk_..."
+            placeholder="AIzaSy..."
             className="w-full px-3 py-2 text-sm bg-transparent outline-none"
             style={{ border: `1px solid ${borderColor}`, fontFamily: "'JetBrains Mono', monospace" }}
             onKeyDown={(e) => {
@@ -45,8 +45,8 @@ export default function ApiKeyModal({ onSave, theme }) {
         </button>
 
         <p className="text-[10px] mt-4 leading-relaxed" style={{ color: mutedText }}>
-          Key holen: <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer"
-            className="underline" style={{ color: '#457B9D' }}>console.groq.com/keys</a> — komplett gratis, extrem schnell.
+          Key holen: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer"
+            className="underline" style={{ color: '#457B9D' }}>aistudio.google.com/apikey</a> — komplett gratis.
         </p>
       </div>
     </div>
